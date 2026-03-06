@@ -1,20 +1,32 @@
-# Ask for total monthly budget
-budget = float(input("Enter your total monthly budget: "))
-total_expenses = 0
-# Loop to enter multiple expenses
 while True:
-    expense = input("Enter an expense (type 'done' to finish): ")
+    # Ask for student's name
+    name = input("Enter student's name (type Exit to stop): ")
 
-    if expense.lower() == "done":
+    if name.lower() == "exit":
+        print("Program ended.")
         break
 
-    total_expenses += float(expense)
-# Calculate remaining balance
-balance = budget - total_expenses
-# Display results
-print("Total Budget   :", budget)
-print("Total Expenses :", total_expenses)
-print("Remaining Bal. :", balance)
-# Warning message
-if balance < 500:
-    print("Warning: Low Funds")
+    # Ask for 3 subject marks
+    mark1 = float(input("Enter mark for subject 1: "))
+    mark2 = float(input("Enter mark for subject 2: "))
+    mark3 = float(input("Enter mark for subject 3: "))
+
+    # Calculate average
+    average = (mark1 + mark2 + mark3) / 3
+
+    # Determine grade
+    if average >= 75:
+        grade = "A"
+    elif average >= 60:
+        grade = "B"
+    elif average >= 40:
+        grade = "C"
+    else:
+        grade = "Fail"
+
+    # Formatted output
+    print("------------------------------")
+    print("Name   :", name)
+    print("Average:", average)
+    print("Grade  :", grade)
+    print("------------------------------")
