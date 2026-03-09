@@ -1,0 +1,18 @@
+The following prompts can be used in an AI tool to improve the design and code:
+1. Layout and Components
+
+"Enhance the UI of a basic HTML/CSS 'Idea Board' app by adding a professional header with a logo icon, a footer section with copyright text, and a status bar at the bottom of the container. The status bar should show the total number of ideas and a 'Clear All' button. Use the 'Inter' font for a modern look."
+
+2. Background and Styling
+
+"Modify the webpage background to be a modern soft mesh gradient (using radial-gradients) instead of a flat color. Style the main form container to have rounded corners (24px), a subtle border, and a soft floating shadow so it looks like it's hovering over the background."
+
+3. Interactive Elements (Buttons and Inputs)
+
+"Update the CSS for form inputs and buttons. Make the inputs light gray with a focus ring effect and change the buttons to have hover transformations (like slightly moving up) and a smooth background color transition. Add a slide-in animation for when new idea cards are added to the list."
+
+4. Functional Logic (JavaScript)
+
+"Write a JavaScript function to allow a user to clear all items from the list at once. Ensure the counter badge automatically updates every time an item is added or deleted."
+
+
