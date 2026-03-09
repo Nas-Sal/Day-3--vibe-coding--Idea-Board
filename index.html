@@ -1,98 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-<title>Student Profile Card</title>
+<meta charset="UTF-8">
+<title>Group Idea Board</title>
 
 <style>
 
 body{
-    margin:0;
-    height:100vh;
+    font-family: Arial, sans-serif;
+    background-color:#f4f6f9;
     display:flex;
     justify-content:center;
     align-items:center;
-
-    /* Gradient background */
-    background: linear-gradient(135deg, #6a11cb, #2575fc);
-
-    /* Changed font */
-    font-family: 'Segoe UI', sans-serif;
+    height:100vh;
+    margin:0;
 }
 
-.card {
-    width: 320px;
-    background: linear-gradient(135deg, #ffffff, #f0f0f0); /* subtle gradient */
-    border-radius: 15px;
-    padding: 25px;
-    text-align: center;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+.container{
+    background:white;
+    padding:30px;
+    width:400px;
+    border-radius:10px;
+    box-shadow:0 4px 15px rgba(0,0,0,0.1);
 }
 
-.card:hover {
-    transform: translateY(-10px);   /* card lift effect on hover */
-    box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+h1{
+    text-align:center;
+    margin-bottom:25px;
+    color:#333;
 }
 
-.profile-img {
-    width: 130px;   /* increased size */
-    height: 130px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 15px;
-
-    /* Add hover zoom effect */
-    transition: transform 0.3s ease;
+select,input{
+    width:100%;
+    padding:10px;
+    margin-bottom:12px;
+    border-radius:6px;
+    border:1px solid #ccc;
+    font-size:14px;
 }
 
-.profile-img:hover {
-    transform: scale(1.1);  /* zooms 10% on hover */
+button{
+    width:100%;
+    padding:10px;
+    background-color:#4CAF50;
+    color:white;
+    border:none;
+    border-radius:6px;
+    font-size:15px;
+    cursor:pointer;
+    transition:0.3s;
 }
 
-h2 {
-    margin: 10px 0;
-    color: #333;
-    font-family: 'Poppins', sans-serif;
+button:hover{
+    background-color:#45a049;
 }
 
-.stream {
-    color: #555;
-    font-weight: bold;
+ul{
+    margin-top:20px;
+    padding-left:18px;
 }
 
-.bio {
-    font-size: 14px;
-    color: #666;
-    margin-top: 10px;
-    line-height: 1.5;
-}
-.card {
-    opacity: 0;
-    animation: fadeIn 1s forwards;
-}
-
-@keyframes fadeIn {
-    to { opacity: 1; }
+li{
+    margin-bottom:8px;
+    color:#444;
 }
 
 </style>
+
 </head>
 
 <body>
 
-<div class="card">
+<div class="container">
 
-<img src="C:\Program Files\Git\CHE_5622.jpg" class="profile-img">
+<h1>Group Idea Board</h1>
 
-<h2>Name: Naseef Salman</h2>
+<select id="name">
+<option>Nimal</option>
+<option>Sara</option>
+<option>Alex</option>
+</select>
 
-<p class="stream">Stream: Computer Science</p>
+<input type="text" id="ideaInput" placeholder="Enter your idea here...">
 
-<p class="bio">
-Short bio: A passionate student who enjoys learning programming and building creative technology projects.
-</p>
+<button onclick="addIdea()">Add Idea</button>
+
+<ul id="ideaList">
+<li>Build a study planner – suggested by Nimal</li>
+<li>Start a podcast – suggested by Sara</li>
+<li>Organize a coding workshop – suggested by Alex</li>
+</ul>
 
 </div>
+
+<script>
+
+function addIdea(){
+
+let idea=document.getElementById("ideaInput").value;
+let name=document.getElementById("name").value;
+
+if(idea.trim()==""){
+alert("Please enter an idea");
+return;
+}
+
+let li=document.createElement("li");
+li.textContent = idea + " – suggested by " + name;
+
+document.getElementById("ideaList").appendChild(li);
+
+document.getElementById("ideaInput").value="";
+
+}
+
+</script>
 
 </body>
 </html>
