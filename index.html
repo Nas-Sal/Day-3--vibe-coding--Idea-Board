@@ -5,65 +5,151 @@
 <meta charset="UTF-8">
 <title>Group Idea Board</title>
 
+<!-- Modern Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
 
-body{
-    font-family: Arial, sans-serif;
-    background-color:#f4f6f9;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    height:100vh;
-    margin:0;
+*{
+box-sizing:border-box;
 }
+
+body{
+font-family:'Inter', 'Poppins', sans-serif;
+background:#f8fafc;
+margin:0;
+display:flex;
+justify-content:center;
+padding:60px 20px;
+}
+
+/* Main Container */
 
 .container{
-    background:white;
-    padding:30px;
-    width:400px;
-    border-radius:10px;
-    box-shadow:0 4px 15px rgba(0,0,0,0.1);
+background:white;
+width:520px;
+padding:40px;
+border-radius:12px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
 }
 
+/* Title */
+
 h1{
-    text-align:center;
-    margin-bottom:25px;
-    color:#333;
+text-align:center;
+margin-bottom:35px;
+font-weight:600;
+}
+
+/* Form Section */
+
+.form-group{
+display:flex;
+flex-direction:column;
+gap:15px;
+margin-bottom:30px;
 }
 
 select,input{
-    width:100%;
-    padding:10px;
-    margin-bottom:12px;
-    border-radius:6px;
-    border:1px solid #ccc;
-    font-size:14px;
+height:42px;
+padding:10px 12px;
+border-radius:8px;
+border:1px solid #d1d5db;
+font-size:14px;
+outline:none;
+transition:0.2s;
 }
 
+select:focus,input:focus{
+border-color:#6366f1;
+box-shadow:0 0 0 2px rgba(99,102,241,0.2);
+}
+
+/* Button */
+
 button{
-    width:100%;
-    padding:10px;
-    background-color:#4CAF50;
-    color:white;
-    border:none;
-    border-radius:6px;
-    font-size:15px;
-    cursor:pointer;
-    transition:0.3s;
+background:#6366f1;
+color:white;
+border:none;
+padding:12px;
+border-radius:10px;
+font-weight:600;
+cursor:pointer;
+transition:all 0.2s ease;
 }
 
 button:hover{
-    background-color:#45a049;
+background:#5558e6;
 }
 
-ul{
-    margin-top:20px;
-    padding-left:18px;
+button:active{
+transform:translateY(2px);
 }
 
-li{
-    margin-bottom:8px;
-    color:#444;
+/* Idea Board */
+
+.idea-board{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+/* Idea Cards */
+
+.idea-card{
+background:white;
+padding:15px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.05);
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+/* Idea Text */
+
+.idea-text{
+font-size:15px;
+}
+
+/* Author */
+
+.idea-author{
+font-size:12px;
+color:#6b7280;
+margin-top:4px;
+}
+
+/* Idea Content */
+
+.idea-content{
+display:flex;
+flex-direction:column;
+}
+
+/* Delete Button */
+
+.delete-btn{
+background:#ef4444;
+border:none;
+color:white;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+}
+
+.delete-btn:hover{
+background:#dc2626;
+}
+
+/* Counter */
+
+.counter{
+margin-top:25px;
+text-align:center;
+font-size:14px;
+color:#374151;
 }
 
 </style>
@@ -74,7 +160,9 @@ li{
 
 <div class="container">
 
-<h1>Group Idea Board</h1>
+<h1>💡 Group Idea Board</h1>
+
+<div class="form-group">
 
 <select id="name">
 <option>Nimal</option>
@@ -86,15 +174,48 @@ li{
 
 <button onclick="addIdea()">Add Idea</button>
 
-<ul id="ideaList">
-<li>Build a study planner – suggested by kamal</li>
-<li>Start a podcast – suggested by Sara</li>
-<li>Organize a coding workshop – suggested by Alex</li>
-</ul>
+</div>
+
+<div class="idea-board" id="ideaList">
+
+<div class="idea-card">
+<div class="idea-content">
+<div class="idea-text">Build a study planner</div>
+<div class="idea-author">suggested by Nimal</div>
+</div>
+<button class="delete-btn" onclick="deleteIdea(this)">Delete</button>
+</div>
+
+<div class="idea-card">
+<div class="idea-content">
+<div class="idea-text">Start a podcast</div>
+<div class="idea-author">suggested by Sara</div>
+</div>
+<button class="delete-btn" onclick="deleteIdea(this)">Delete</button>
+</div>
+
+<div class="idea-card">
+<div class="idea-content">
+<div class="idea-text">Organize a coding workshop</div>
+<div class="idea-author">suggested by Alex</div>
+</div>
+<button class="delete-btn" onclick="deleteIdea(this)">Delete</button>
+</div>
+
+</div>
+
+<div class="counter">
+Total Ideas: <span id="ideaCount">3</span>
+</div>
 
 </div>
 
 <script>
+
+function updateCounter(){
+let count=document.querySelectorAll(".idea-card").length;
+document.getElementById("ideaCount").textContent=count;
+}
 
 function addIdea(){
 
@@ -106,14 +227,29 @@ alert("Please enter an idea");
 return;
 }
 
-let li=document.createElement("li");
-li.textContent = idea + " – suggested by " + name;
+let card=document.createElement("div");
+card.className="idea-card";
 
-document.getElementById("ideaList").appendChild(li);
+card.innerHTML=
+`<div class="idea-content">
+<div class="idea-text">${idea}</div>
+<div class="idea-author">suggested by ${name}</div>
+</div>
+<button class="delete-btn" onclick="deleteIdea(this)">Delete</button>`;
+
+document.getElementById("ideaList").appendChild(card);
 
 document.getElementById("ideaInput").value="";
 
+updateCounter();
 }
+
+function deleteIdea(button){
+button.parentElement.remove();
+updateCounter();
+}
+
+updateCounter();
 
 </script>
 
