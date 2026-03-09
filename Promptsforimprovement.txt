@@ -1,0 +1,16 @@
+### Prompts to Improve Group Idea Board Design
+
+**1. Modern Layout & Spacing Prompt:**
+"Refactor the layout of the Idea Board to use a more spacious and centered design. Increase the container padding and use a modern sans-serif font stack (like 'Inter' or 'Poppins'). Ensure there is ample whitespace between the title, input section, and the list items to create a clean, uncluttered look."
+
+**2. Colors & Styling Prompt:**
+"Apply a contemporary color palette. Use a light, neutral background color (like #f8fafc) for the page and a crisp white background for the main container. Incorporate a primary accent color (such as Indigo #6366f1) for active elements like borders, focus states, and the primary button."
+
+**3. Clear List Layout Prompt:**
+"Redesign the idea list items into distinct 'idea cards'. Each card should have its own border-radius, a very subtle box-shadow, and consistent internal padding. Separate the main idea text from the author's name, styling the author text in a smaller, muted font color to improve readability and hierarchy."
+
+**4. Visually Appealing Button Design Prompt:**
+"Create a modern, high-contrast button for adding ideas. Use a bold primary color, rounded corners (8px-12px), and semi-bold typography. Add a smooth transition effect for hover states (slight color change) and an active state (slight vertical push) to make the interface feel interactive and polished."
+
+**5. Form Input Modernization Prompt:**
+"Update the input field and select dropdown to have a consistent height, soft borders, and clear focus indicators using the primary accent color. Ensure the placeholder text is legible and the overall form grouping feels integrated and professional."
