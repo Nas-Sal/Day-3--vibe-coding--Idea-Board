@@ -1,71 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<title>Group Idea Board</title>
 
-<!-- Modern Google Font -->
+<meta charset="UTF-8">
+<title>Idea Board</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
 
 *{
 box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
 body{
-font-family:'Inter', 'Poppins', sans-serif;
-background:#f8fafc;
-margin:0;
+font-family:'Inter',sans-serif;
+min-height:100vh;
 display:flex;
 justify-content:center;
-padding:60px 20px;
+align-items:center;
+padding:40px;
+
+/* Mesh Gradient Background */
+
+background:
+radial-gradient(at 20% 30%, #c7d2fe 0px, transparent 50%),
+radial-gradient(at 80% 20%, #fbcfe8 0px, transparent 50%),
+radial-gradient(at 50% 80%, #a5f3fc 0px, transparent 50%),
+#f8fafc;
 }
 
 /* Main Container */
 
 .container{
+width:560px;
 background:white;
-width:520px;
-padding:40px;
-border-radius:12px;
-box-shadow:0 10px 25px rgba(0,0,0,0.08);
+border-radius:24px;
+border:1px solid #e5e7eb;
+padding:35px;
+box-shadow:0 20px 40px rgba(0,0,0,0.08);
 }
 
-/* Title */
+/* Header */
 
-h1{
-text-align:center;
-margin-bottom:35px;
+.header{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:25px;
 font-weight:600;
+font-size:20px;
 }
 
-/* Form Section */
+.logo{
+font-size:24px;
+}
+
+/* Form */
 
 .form-group{
 display:flex;
 flex-direction:column;
 gap:15px;
-margin-bottom:30px;
+margin-bottom:25px;
 }
 
+/* Inputs */
+
 select,input{
-height:42px;
+height:44px;
 padding:10px 12px;
-border-radius:8px;
-border:1px solid #d1d5db;
+border-radius:10px;
+border:1px solid #e5e7eb;
+background:#f3f4f6;
 font-size:14px;
-outline:none;
 transition:0.2s;
 }
 
 select:focus,input:focus{
+outline:none;
 border-color:#6366f1;
-box-shadow:0 0 0 2px rgba(99,102,241,0.2);
+box-shadow:0 0 0 3px rgba(99,102,241,0.2);
 }
 
-/* Button */
+/* Buttons */
 
 button{
 background:#6366f1;
@@ -75,15 +95,12 @@ padding:12px;
 border-radius:10px;
 font-weight:600;
 cursor:pointer;
-transition:all 0.2s ease;
+transition:0.25s;
 }
 
 button:hover{
-background:#5558e6;
-}
-
-button:active{
-transform:translateY(2px);
+transform:translateY(-2px);
+background:#4f46e5;
 }
 
 /* Idea Board */
@@ -92,32 +109,34 @@ transform:translateY(2px);
 display:flex;
 flex-direction:column;
 gap:12px;
+margin-bottom:20px;
 }
 
-/* Idea Cards */
+/* Idea Card */
 
 .idea-card{
 background:white;
 padding:15px;
-border-radius:10px;
-box-shadow:0 2px 6px rgba(0,0,0,0.05);
+border-radius:12px;
+border:1px solid #e5e7eb;
+box-shadow:0 4px 10px rgba(0,0,0,0.04);
 display:flex;
 justify-content:space-between;
 align-items:center;
+animation:slideIn 0.3s ease;
 }
 
-/* Idea Text */
+/* Animation */
 
-.idea-text{
-font-size:15px;
+@keyframes slideIn{
+from{
+opacity:0;
+transform:translateY(10px);
 }
-
-/* Author */
-
-.idea-author{
-font-size:12px;
-color:#6b7280;
-margin-top:4px;
+to{
+opacity:1;
+transform:translateY(0);
+}
 }
 
 /* Idea Content */
@@ -125,6 +144,17 @@ margin-top:4px;
 .idea-content{
 display:flex;
 flex-direction:column;
+}
+
+.idea-text{
+font-size:15px;
+font-weight:500;
+}
+
+.idea-author{
+font-size:12px;
+color:#6b7280;
+margin-top:4px;
 }
 
 /* Delete Button */
@@ -135,21 +165,39 @@ border:none;
 color:white;
 padding:6px 10px;
 border-radius:6px;
+font-size:12px;
 cursor:pointer;
+}
+
+/* Status Bar */
+
+.status-bar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding-top:15px;
+border-top:1px solid #e5e7eb;
+font-size:14px;
+}
+
+.clear-btn{
+background:#111827;
+padding:6px 12px;
+border-radius:8px;
 font-size:12px;
 }
 
-.delete-btn:hover{
-background:#dc2626;
+.clear-btn:hover{
+background:#000;
 }
 
-/* Counter */
+/* Footer */
 
-.counter{
-margin-top:25px;
+.footer{
 text-align:center;
-font-size:14px;
-color:#374151;
+margin-top:20px;
+font-size:12px;
+color:#6b7280;
 }
 
 </style>
@@ -160,7 +208,10 @@ color:#374151;
 
 <div class="container">
 
-<h1>💡 Group Idea Board</h1>
+<div class="header">
+<span class="logo">💡</span>
+Group Idea Board
+</div>
 
 <div class="form-group">
 
@@ -194,18 +245,22 @@ color:#374151;
 <button class="delete-btn" onclick="deleteIdea(this)">Delete</button>
 </div>
 
-<div class="idea-card">
-<div class="idea-content">
-<div class="idea-text">Organize a coding workshop</div>
-<div class="idea-author">suggested by Alex</div>
 </div>
-<button class="delete-btn" onclick="deleteIdea(this)">Delete</button>
+
+<!-- Status Bar -->
+
+<div class="status-bar">
+
+<div>
+Total Ideas: <span id="ideaCount">2</span>
 </div>
+
+<button class="clear-btn" onclick="clearAll()">Clear All</button>
 
 </div>
 
-<div class="counter">
-Total Ideas: <span id="ideaCount">3</span>
+<div class="footer">
+© 2026 Idea Board App
 </div>
 
 </div>
@@ -246,6 +301,11 @@ updateCounter();
 
 function deleteIdea(button){
 button.parentElement.remove();
+updateCounter();
+}
+
+function clearAll(){
+document.getElementById("ideaList").innerHTML="";
 updateCounter();
 }
 
