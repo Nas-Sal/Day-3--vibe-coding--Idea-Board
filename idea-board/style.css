@@ -1,0 +1,246 @@
+/* Global variables for consistent colors and gradients */
+:root {
+    --primary-blue: #4facfe; /* Lighter blue for gradient start */
+    --primary-purple: #00f2fe; /* Cyan for gradient end */
+    --hover-blue: #007bff;
+    --light-bg: #f4f7f6;
+    --card-white: #ffffff;
+    --text-dark: #333333;
+    --border-gray: #dddddd;
+    
+    /* Gradient Background */
+    --main-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Global styles for the page */
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    /* 1. Gradient Background: Smooth blue to purple gradient covering full screen */
+    background: var(--main-gradient);
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* 5. Card Animation: Main container with shadow and hover lift effect */
+.container {
+    background-color: var(--card-white);
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    box-shadow: 0px 15px 35px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    /* Smooth transition for the lift effect */
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+/* Subtle lift and stronger shadow when hovering over the card */
+.container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 20px 45px rgba(0, 0, 0, 0.3);
+}
+
+/* Header style with a subtle semi-transparent blue background */
+header {
+    background-color: rgba(0, 123, 255, 0.9);
+    color: white;
+    padding: 30px 15px;
+}
+
+.header-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo-icon {
+    font-size: 2.2rem;
+    /* Subtle bounce animation for the icon */
+    animation: bounce 2s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Main content area padding */
+.board-content {
+    padding: 30px;
+}
+
+/* Input section styling */
+.input-section {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #555;
+    margin-left: 2px;
+}
+
+/* 4. Input Field Focus Effect: Glowing highlight when focused */
+#user-name, #idea-input {
+    padding: 14px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+}
+
+#user-name:focus, #idea-input:focus {
+    outline: none;
+    border-color: #667eea;
+    background-color: #fff;
+    /* Glowing shadow effect */
+    box-shadow: 0 0 12px rgba(102, 126, 234, 0.3);
+}
+
+/* Button Group layout */
+.button-group {
+    display: flex;
+    gap: 12px;
+    margin-top: 5px;
+}
+
+/* 2. Button Animations: Hover grow and color change */
+#add-idea-btn, #clear-input-btn {
+    flex: 1;
+    padding: 14px;
+    font-size: 1rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    /* Smooth transitions for all properties */
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+#add-idea-btn {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    color: white;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Hover Grow Effect for Add Idea Button */
+#add-idea-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    filter: brightness(1.1);
+}
+
+#clear-input-btn {
+    background-color: #f1f3f5;
+    color: #495057;
+}
+
+#clear-input-btn:hover {
+    background-color: #e9ecef;
+    transform: translateY(-1px);
+}
+
+#add-idea-btn:active, #clear-input-btn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+/* Idea Counter Section Styling */
+.counter-section {
+    margin-top: 25px;
+    text-align: right;
+    font-size: 0.95rem;
+    color: #666;
+    font-weight: 600;
+}
+
+#idea-count {
+    display: inline-block;
+    color: #764ba2;
+    font-size: 1.2rem;
+    font-weight: 700;
+    transition: transform 0.3s ease;
+}
+
+/* Divider line */
+.divider {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 20px 0;
+}
+
+/* List style for displaying ideas */
+#idea-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 3. Idea List Animation: Each item slides in and fades in */
+#idea-list li {
+    background-color: #fff;
+    margin-bottom: 15px;
+    padding: 18px;
+    border-left: 6px solid #667eea;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.05);
+    color: var(--text-dark);
+    font-size: 1rem;
+    line-height: 1.5;
+    word-break: break-word;
+    /* Initial state for animation */
+    opacity: 0;
+    transform: translateX(-20px);
+    /* Animation execution */
+    animation: slideInFade 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Keyframes for sliding and fading in ideas */
+@keyframes slideInFade {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Footer styling */
+footer {
+    background-color: #fcfcfc;
+    text-align: center;
+    padding: 20px;
+    font-size: 0.9rem;
+    color: #999;
+    border-top: 1px solid #eee;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+    .container {
+        border-radius: 0;
+    }
+}
