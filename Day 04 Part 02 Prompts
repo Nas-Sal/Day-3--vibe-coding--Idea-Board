@@ -1,0 +1,102 @@
+I have a Student Toolkit Dashboard built using HTML, CSS, and JavaScript.
+
+Inside the dashboard there is already a GPA Calculator section with inputs for:
+- Subject name
+- Credit hours
+- Grade dropdown
+
+Improve and extend this GPA Calculator with the following features:
+
+1. Add a "Calculate GPA" button that calculates the GPA only when clicked.
+2. Validate the inputs so:
+   - Credits must be a positive number.
+   - Subject name cannot be empty.
+3. Display the calculated GPA in a styled result box below the table.
+4. Highlight GPA results using color:
+   - Green if GPA >= 3.5
+   - Yellow if GPA between 2.5 – 3.49
+   - Red if GPA < 2.5
+5. Allow editing subjects already added.
+6. Keep the existing LocalStorage functionality so subjects persist after refresh.
+7. Do NOT break the current UI layout or styling.
+
+Return only the updated JavaScript and minimal HTML modifications needed.
+
+I have a Pomodoro Study Timer implemented in JavaScript inside a dashboard.
+
+Improve the existing timer with the following features:
+
+1. The timer must start at 25:00 minutes.
+2. Add three buttons:
+   - Start / Pause
+   - Reset
+   - Short Break (5 minutes)
+
+3. When the timer reaches zero:
+   - Play a bell sound.
+   - Show a browser notification "Time is up! Take a break."
+
+4. Add a circular progress indicator that visually shows remaining time.
+
+5. Prevent multiple timers from running at once.
+
+6. Keep the timer design centered and consistent with the existing card UI.
+
+Provide:
+- JavaScript updates
+- Any required HTML additions
+- Minimal CSS for the progress indicator
+
+I have a Student Toolkit Dashboard with a light theme.
+
+Add a Dark Mode toggle switch in the navigation bar.
+
+Requirements:
+
+1. Add a toggle button with a moon/sun icon in the navbar.
+2. When clicked:
+   - Switch the entire interface to dark mode.
+3. Dark mode colors should include:
+   - Background: #0f172a
+   - Cards: #1e293b
+   - Text: #e2e8f0
+   - Borders: #334155
+
+4. Use CSS variables so the theme switches smoothly.
+
+5. Save the user's theme preference using LocalStorage so the theme remains after refresh.
+
+6. The toggle should animate smoothly.
+
+Provide:
+- HTML for the toggle button
+- CSS variables for dark mode
+- JavaScript logic to switch themes
+
+I built a Student Toolkit Dashboard using HTML, CSS, and JavaScript.
+
+The dashboard already includes:
+- Idea Board
+- GPA Calculator
+- Pomodoro Study Timer
+- Sidebar with upcoming events
+- Responsive layout
+
+Extend this dashboard by implementing:
+
+1. A GPA Calculator that computes GPA based on credits and grades.
+2. A Pomodoro Timer with 25 minute countdown, Start, Pause, Reset, and notification sound.
+3. A Dark Mode toggle in the navigation bar that switches the interface theme.
+4. Smooth animations for transitions between light and dark modes.
+5. LocalStorage support for:
+   - Saved ideas
+   - GPA subjects
+   - Dark mode preference
+
+Constraints:
+- Do NOT break the existing UI structure.
+- Maintain the current styling and design system.
+- Keep the JavaScript modular and readable.
+
+Return the updated HTML, CSS, and JavaScript code sections.
+
