@@ -215,11 +215,7 @@ Group Idea Board
 
 <div class="form-group">
 
-<select id="name">
-<option>Nimal</option>
-<option>Sara</option>
-<option>Alex</option>
-</select>
+<input type="text" id="name" placeholder="Enter your name">
 
 <input type="text" id="ideaInput" placeholder="Enter your idea here...">
 
@@ -276,6 +272,11 @@ function addIdea(){
 
 let idea=document.getElementById("ideaInput").value;
 let name=document.getElementById("name").value;
+
+if(name.trim()==""){
+alert("Please enter your name");
+return;
+}
 
 if(idea.trim()==""){
 alert("Please enter an idea");
