@@ -1,0 +1,124 @@
+You are an expert frontend developer.
+
+Convert the given HTML "Idea Board" application into a complete "Student Toolkit" website using only HTML, CSS, and Vanilla JavaScript.
+
+Requirements:
+
+1. Create a top navigation bar (class name: navbar) with the following menu items:
+- Idea Board
+- GPA Calculator
+- Study Timer
+
+2. Create a sidebar (class name: sidebar) on the left side that contains a section titled:
+"Upcoming Events"
+
+Example events:
+- Math Exam – April 10
+- Assignment Deadline – April 12
+- Group Presentation – April 15
+
+3. The main content area should display different tools depending on the selected menu item:
+- Idea Board (existing feature)
+- GPA Calculator
+- Study Timer
+
+4. GPA Calculator requirements:
+- Inputs for Subject Name
+- Credit Hours
+- Grade (A, B, C, D, F)
+- Add multiple subjects
+- Calculate GPA button
+- Display calculated GPA result
+
+5. Study Timer requirements:
+- Pomodoro style timer
+- 25 minute countdown
+- Start / Pause / Reset buttons
+- Display timer visually
+
+6. Layout structure:
+- navbar at the top
+- sidebar on the left
+- main content area on the right
+
+7. Use modern UI styling:
+- Inter font
+- soft shadows
+- rounded corners
+- smooth hover animations
+
+8. Keep the design consistent with the existing mesh gradient background.
+
+9. Organize CSS using classes:
+- navbar
+- sidebar
+- main-content
+- tool-container
+
+10. Use clean, well-commented JavaScript.
+
+Return the FULL working code in a single HTML file.
+
+Improve the UI design of this Student Toolkit website.
+
+Enhancements required:
+- Sticky modern navigation bar
+- Collapsible sidebar
+- Icons for GPA Calculator and Study Timer
+- Smooth transitions between sections
+- Card-style containers
+- Better spacing and alignment
+- Mobile responsive layout
+
+Use modern CSS techniques like Flexbox or Grid.
+Keep the design minimal and professional for students.
+
+Improve the UI design of this Student Toolkit website.
+
+Enhancements required:
+- Sticky modern navigation bar
+- Collapsible sidebar
+- Icons for GPA Calculator and Study Timer
+- Smooth transitions between sections
+- Card-style containers
+- Better spacing and alignment
+- Mobile responsive layout
+
+Use modern CSS techniques like Flexbox or Grid.
+Keep the design minimal and professional for students.
+
+Make the Student Toolkit website fully responsive.
+
+Requirements:
+- Sidebar should collapse into a hamburger menu on mobile
+- Navbar items should stack on small screens
+- Content should adjust using CSS Grid or Flexbox
+- Ensure the GPA Calculator and Study Timer work properly on mobile devices
+
+Optimize for:
+Desktop
+Tablet
+Mobile
+
+Upgrade the Student Toolkit website by adding Local Storage.
+
+Requirements:
+- Save Idea Board ideas in localStorage
+- Save GPA Calculator subjects
+- Restore data automatically when the page reloads
+- Prevent duplicate entries
+- Add a confirmation before clearing data
+
+Ensure clean JavaScript structure.
+
+Transform the Student Toolkit website into a modern web application dashboard.
+
+Add:
+- animated sidebar
+- modern dashboard layout
+- icons for tools
+- card-based interface
+- subtle hover animations
+- smooth transitions between tools
+
+Use CSS Grid for layout and keep the code clean and readable.

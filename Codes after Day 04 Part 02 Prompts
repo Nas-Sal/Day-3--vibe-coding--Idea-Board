@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Toolkit | Smart Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-body: radial-gradient(at 20% 30%, #c7d2fe 0px, transparent 50%), radial-gradient(at 80% 20%, #fbcfe8 0px, transparent 50%), #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
+        .dark-mode {
+            --primary: #818cf8;
+            --bg-body: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
+
+        body {
+            background: var(--bg-body);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Glassmorphism Navbar --- */
+        .navbar {
+            backdrop-filter: blur(12px);
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0; z-index: 1000;
+        }
+
+        .nav-logo { font-weight: 800; font-size: 1.4rem; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+
+        .nav-links { display: flex; gap: 15px; }
+
+        .nav-item {
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .nav-item.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+
+        /* --- Layout --- */
+        .container { display: grid; grid-template-columns: 280px 1fr; gap: 30px; padding: 30px; max-width: 1400px; margin: 0 auto; }
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        /* --- GPA Calculator Styling --- */
+        .gpa-grid { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; margin: 20px 0; }
+        input, select { 
+            padding: 12px; border-radius: 12px; border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.5); color: var(--text-main);
+        }
+        .dark-mode input, .dark-mode select { background: rgba(15, 23, 42, 0.5); }
+
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; }
+        .btn-add:hover { background: var(--primary-hover); transform: translateY(-2px); }
+
+        .result-badge {
+            font-size: 2.5rem; font-weight: 800; color: var(--primary);
+            margin: 20px 0; display: block;
+        }
+
+        /* --- Pomodoro Timer --- */
+        .timer-circle {
+            width: 220px; height: 220px; border-radius: 50%;
+            border: 10px solid var(--border);
+            margin: 20px auto;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: var(--card-bg);
+        }
+        .timer-time { font-size: 3rem; font-weight: 800; color: var(--primary); }
+
+        /* --- Theme Toggle --- */
+        .theme-switch {
+            cursor: pointer; font-size: 1.5rem; color: var(--text-main);
+            background: none; border: none;
+        }
+
+        @media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo"><i class="ph-fill ph-rocket-launch"></i> StudentToolkit</div>
+    <div class="nav-links">
+        <div class="nav-item active" onclick="switchTab('gpa')">GPA</div>
+        <div class="nav-item" onclick="switchTab('timer')">Timer</div>
+    </div>
+    <button class="theme-switch" onclick="toggleTheme()"><i id="theme-icon" class="ph ph-moon"></i></button>
+</nav>
+
+<div class="container">
+    <aside class="card sidebar">
+        <h3 style="margin-bottom: 20px;">📅 Deadlines</h3>
+        <div style="border-left: 3px solid var(--primary); padding-left: 15px; margin-bottom: 15px;">
+            <p style="font-size: 0.8rem; color: var(--text-muted);">March 15</p>
+            <p style="font-weight: 600;">Web Project Due</p>
+        </div>
+        <div style="border-left: 3px solid #f43f5e; padding-left: 15px;">
+            <p style="font-size: 0.8rem; color: var(--text-muted);">March 20</p>
+            <p style="font-weight: 600;">Math Final Exam</p>
+        </div>
+    </aside>
+
+    <main>
+        <section id="gpa-section" class="card">
+            <h2>GPA Calculator</h2>
+            <p style="color: var(--text-muted);">Easily track your semester progress.</p>
+            <div class="gpa-grid">
+                <input type="text" id="sub" placeholder="Subject Name">
+                <input type="number" id="cre" placeholder="Credits">
+                <select id="grd">
+                    <option value="4.0">A (4.0)</option>
+                    <option value="3.0">B (3.0)</option>
+                    <option value="2.0">C (2.0)</option>
+                </select>
+                <button class="btn-add" onclick="addSubject()">Add</button>
+            </div>
+            <div style="text-align: center;">
+                <span style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase;">Your GPA</span>
+                <span id="gpa-val" class="result-badge">0.00</span>
+            </div>
+        </section>
+
+        <section id="timer-section" class="card" style="display: none; text-align: center;">
+            <h2>Focus Timer</h2>
+            <div class="timer-circle">
+                <div class="timer-time" id="t-display">25:00</div>
+                <p style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted);">MINUTES</p>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 10px;">
+                <button class="btn-add" id="t-start" onclick="runTimer()">Start Session</button>
+                <button class="btn-add" style="background: #64748b;" onclick="resetTimer()">Reset</button>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    // Theme Toggle
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        const icon = document.getElementById('theme-icon');
+        icon.className = document.body.classList.contains('dark-mode') ? 'ph ph-sun' : 'ph ph-moon';
+    }
+
+    // Tab Switching
+    function switchTab(type) {
+        document.getElementById('gpa-section').style.display = type === 'gpa' ? 'block' : 'none';
+        document.getElementById('timer-section').style.display = type === 'timer' ? 'block' : 'none';
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        event.target.classList.add('active');
+    }
+
+    // GPA Logic
+    let totalPoints = 0, totalCredits = 0;
+    function addSubject() {
+        const c = parseFloat(document.getElementById('cre').value);
+        const g = parseFloat(document.getElementById('grd').value);
+        if(!c) return alert("Enter credits!");
+        totalPoints += (c * g);
+        totalCredits += c;
+        document.getElementById('gpa-val').innerText = (totalPoints / totalCredits).toFixed(2);
+    }
+
+    // Simple Timer Logic
+    let time = 1500, interval = null;
+    function runTimer() {
+        if(interval) { clearInterval(interval); interval = null; document.getElementById('t-start').innerText = "Start"; return; }
+        document.getElementById('t-start').innerText = "Pause";
+        interval = setInterval(() => {
+            time--;
+            let m = Math.floor(time/60), s = time%60;
+            document.getElementById('t-display').innerText = `${m}:${s<10?'0':''}${s}`;
+            if(time <= 0) { clearInterval(interval); alert("Time's up!"); resetTimer(); }
+        }, 1000);
+    }
+    function resetTimer() { clearInterval(interval); interval = null; time = 1500; document.getElementById('t-display').innerText = "25:00"; document.getElementById('t-start').innerText = "Start Session"; }
+</script>
+</body>
+</html>

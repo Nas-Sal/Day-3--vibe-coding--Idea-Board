@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Toolkit Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<style>
+
+:root{
+--primary:#6366f1;
+--primary-hover:#4f46e5;
+
+--bg-soft:#f8fafc;
+--text-main:#1e293b;
+--text-muted:#64748b;
+--card-bg:#ffffff;
+--border:#e2e8f0;
+
+--dark-bg:#0f172a;
+--dark-card:#1e293b;
+--dark-text:#e2e8f0;
+--dark-border:#334155;
+
+--shadow:0 10px 15px rgba(0,0,0,0.1);
+--sidebar-width:260px;
+}
+
+body.dark{
+background:var(--dark-bg);
+color:var(--dark-text);
+}
+
+body.dark .card,
+body.dark .sidebar,
+body.dark .navbar{
+background:var(--dark-card);
+border-color:var(--dark-border);
+}
+
+body.dark input,
+body.dark select{
+background:#334155;
+color:#fff;
+border-color:#475569;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+background:var(--bg-soft);
+min-height:100vh;
+transition:0.3s;
+}
+
+.app-wrapper{
+display:grid;
+grid-template-columns:var(--sidebar-width) 1fr;
+grid-template-rows:70px 1fr;
+min-height:100vh;
+}
+
+.navbar{
+grid-column:1/-1;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 30px;
+background:var(--card-bg);
+border-bottom:1px solid var(--border);
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+}
+
+.nav-item{
+cursor:pointer;
+padding:8px 12px;
+border-radius:8px;
+color:var(--text-muted);
+}
+
+.nav-item.active{
+color:var(--primary);
+background:rgba(99,102,241,0.1);
+}
+
+.dark-toggle{
+cursor:pointer;
+font-size:20px;
+}
+
+.sidebar{
+background:var(--card-bg);
+border-right:1px solid var(--border);
+padding:30px 20px;
+}
+
+.event-card{
+background:white;
+border:1px solid var(--border);
+padding:12px;
+border-radius:10px;
+margin-bottom:10px;
+}
+
+.main-content{
+padding:40px;
+}
+
+.tool-section{
+display:none;
+}
+
+.tool-section.active{
+display:block;
+}
+
+.card{
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
+
+.form-row{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+input,select{
+padding:10px;
+border-radius:10px;
+border:1px solid var(--border);
+flex:1;
+}
+
+button{
+padding:10px 16px;
+border:none;
+border-radius:10px;
+background:var(--primary);
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:var(--primary-hover);
+}
+
+.gpa-result{
+margin-top:20px;
+padding:15px;
+border-radius:10px;
+font-weight:600;
+text-align:center;
+}
+
+.gpa-good{background:#dcfce7;color:#166534;}
+.gpa-mid{background:#fef9c3;color:#854d0e;}
+.gpa-bad{background:#fee2e2;color:#991b1b;}
+
+.timer-display{
+font-size:4rem;
+text-align:center;
+margin:20px 0;
+}
+
+.timer-controls{
+display:flex;
+gap:10px;
+justify-content:center;
+}
+
+.progress-ring{
+width:150px;
+height:150px;
+margin:auto;
+}
+
+.progress-ring circle{
+fill:none;
+stroke:var(--primary);
+stroke-width:8;
+stroke-dasharray:440;
+stroke-dashoffset:0;
+transition:stroke-dashoffset 1s linear;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app-wrapper">
+
+<nav class="navbar">
+
+<div class="nav-logo">
+<i class="ph-fill ph-graduation-cap"></i>
+StudentToolkit
+</div>
+
+<div class="nav-links">
+<a class="nav-item active" onclick="showTool('idea-board')">Idea Board</a>
+<a class="nav-item" onclick="showTool('gpa-calc')">GPA Calculator</a>
+<a class="nav-item" onclick="showTool('timer')">Study Timer</a>
+</div>
+
+<div class="dark-toggle" onclick="toggleDarkMode()">
+<i id="darkIcon" class="ph ph-moon"></i>
+</div>
+
+</nav>
+
+<aside class="sidebar">
+
+<h3>Upcoming Events</h3>
+
+<div class="event-card">
+APRIL 10<br>Math Midterm
+</div>
+
+<div class="event-card">
+APRIL 12<br>UI Assignment
+</div>
+
+</aside>
+
+<main class="main-content">
+
+<!-- IDEA BOARD -->
+<section id="idea-board" class="tool-section active">
+<div class="card">
+
+<h2>Idea Board</h2>
+
+<div class="form-row">
+<input id="ideaUser" placeholder="Your Name">
+<input id="ideaInput" placeholder="Idea">
+<button onclick="addIdea()">Add</button>
+</div>
+
+<div id="ideaList"></div>
+
+</div>
+</section>
+
+<!-- GPA -->
+<section id="gpa-calc" class="tool-section">
+
+<div class="card">
+
+<h2>GPA Calculator</h2>
+
+<div class="form-row">
+<input id="subjectName" placeholder="Subject">
+<input type="number" id="creditHours" placeholder="Credits">
+<select id="gradeValue">
+<option value="4">A</option>
+<option value="3">B</option>
+<option value="2">C</option>
+<option value="1">D</option>
+<option value="0">F</option>
+</select>
+<button onclick="addSubject()">Add</button>
+</div>
+
+<table width="100%">
+<thead>
+<tr>
+<th>Subject</th>
+<th>Credits</th>
+<th>Grade</th>
+<th></th>
+</tr>
+</thead>
+
+<tbody id="gpaList"></tbody>
+
+</table>
+
+<br>
+
+<button onclick="calculateGPA()">Calculate GPA</button>
+
+<div id="gpaResult" class="gpa-result"></div>
+
+</div>
+
+</section>
+
+<!-- TIMER -->
+
+<section id="timer" class="tool-section">
+
+<div class="card" style="text-align:center">
+
+<h2>Pomodoro Timer</h2>
+
+<svg class="progress-ring">
+<circle r="70" cx="75" cy="75" id="progressCircle"></circle>
+</svg>
+
+<div class="timer-display" id="timerDisplay">25:00</div>
+
+<div class="timer-controls">
+<button onclick="toggleTimer()">Start / Pause</button>
+<button onclick="resetTimer()">Reset</button>
+<button onclick="shortBreak()">Short Break</button>
+</div>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+
+function showTool(id){
+document.querySelectorAll(".tool-section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+/* DARK MODE */
+
+function toggleDarkMode(){
+
+document.body.classList.toggle("dark")
+
+const icon=document.getElementById("darkIcon")
+
+if(document.body.classList.contains("dark")){
+icon.className="ph ph-sun"
+localStorage.setItem("theme","dark")
+}else{
+icon.className="ph ph-moon"
+localStorage.setItem("theme","light")
+}
+
+}
+
+if(localStorage.getItem("theme")==="dark"){
+document.body.classList.add("dark")
+}
+
+/* IDEA BOARD */
+
+let ideas=JSON.parse(localStorage.getItem("ideas"))||[]
+
+function renderIdeas(){
+const list=document.getElementById("ideaList")
+list.innerHTML=""
+
+ideas.forEach((i,index)=>{
+list.innerHTML+=`
+<div class="event-card">
+${i.user}: ${i.text}
+<button onclick="deleteIdea(${index})">x</button>
+</div>`
+})
+
+localStorage.setItem("ideas",JSON.stringify(ideas))
+}
+
+function addIdea(){
+
+const user=document.getElementById("ideaUser").value
+const text=document.getElementById("ideaInput").value
+
+ideas.push({user,text})
+
+renderIdeas()
+}
+
+function deleteIdea(i){
+ideas.splice(i,1)
+renderIdeas()
+}
+
+renderIdeas()
+
+/* GPA */
+
+let subjects=JSON.parse(localStorage.getItem("gpa"))||[]
+
+function renderSubjects(){
+
+const list=document.getElementById("gpaList")
+list.innerHTML=""
+
+subjects.forEach((s,i)=>{
+
+list.innerHTML+=`
+<tr>
+<td contenteditable oninput="editSubject(${i},'name',this.innerText)">${s.name}</td>
+<td contenteditable oninput="editSubject(${i},'credits',this.innerText)">${s.credits}</td>
+<td>${s.grade}</td>
+<td><button onclick="deleteSubject(${i})">x</button></td>
+</tr>
+`
+
+})
+
+localStorage.setItem("gpa",JSON.stringify(subjects))
+
+}
+
+function addSubject(){
+
+const name=document.getElementById("subjectName").value
+const credits=document.getElementById("creditHours").value
+const grade=document.getElementById("gradeValue").value
+
+if(!name||credits<=0){
+alert("Enter valid data")
+return
+}
+
+subjects.push({name,credits,grade})
+
+renderSubjects()
+
+}
+
+function editSubject(i,key,val){
+subjects[i][key]=val
+localStorage.setItem("gpa",JSON.stringify(subjects))
+}
+
+function deleteSubject(i){
+subjects.splice(i,1)
+renderSubjects()
+}
+
+function calculateGPA(){
+
+let points=0
+let credits=0
+
+subjects.forEach(s=>{
+points+=s.grade*s.credits
+credits+=parseFloat(s.credits)
+})
+
+const gpa=(points/credits).toFixed(2)
+
+const box=document.getElementById("gpaResult")
+
+box.innerText="GPA : "+gpa
+
+box.className="gpa-result "
+
+if(gpa>=3.5)box.classList.add("gpa-good")
+else if(gpa>=2.5)box.classList.add("gpa-mid")
+else box.classList.add("gpa-bad")
+
+}
+
+renderSubjects()
+
+/* TIMER */
+
+let time=1500
+let timer=null
+const circle=document.getElementById("progressCircle")
+const circumference=440
+
+function updateTimer(){
+
+let min=Math.floor(time/60)
+let sec=time%60
+
+document.getElementById("timerDisplay").innerText=
+`${min.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`
+
+circle.style.strokeDashoffset=circumference-(time/1500)*circumference
+
+}
+
+function toggleTimer(){
+
+if(timer){
+clearInterval(timer)
+timer=null
+return
+}
+
+timer=setInterval(()=>{
+
+time--
+
+updateTimer()
+
+if(time<=0){
+
+clearInterval(timer)
+
+new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg").play()
+
+if(Notification.permission==="granted"){
+new Notification("Time is up! Take a break.")
+}
+
+}
+
+},1000)
+
+}
+
+function resetTimer(){
+
+clearInterval(timer)
+timer=null
+time=1500
+updateTimer()
+
+}
+
+function shortBreak(){
+
+clearInterval(timer)
+time=300
+updateTimer()
+
+}
+
+Notification.requestPermission()
+
+updateTimer()
+
+</script>
+
+</body>
+</html>

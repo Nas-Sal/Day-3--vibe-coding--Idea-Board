@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Student Toolkit Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+<style>
+
+:root{
+--primary:#6366f1;
+--bg:#f8fafc;
+--text:#1e293b;
+--card:#ffffff;
+--border:#e2e8f0;
+--dark-bg:#0f172a;
+--dark-card:#1e293b;
+--dark-text:#e2e8f0;
+}
+
+body{
+font-family:Inter;
+margin:0;
+background:var(--bg);
+color:var(--text);
+transition:.3s;
+}
+
+.dark{
+background:var(--dark-bg);
+color:var(--dark-text);
+}
+
+.navbar{
+display:flex;
+justify-content:space-between;
+padding:20px;
+border-bottom:1px solid var(--border);
+background:var(--card);
+}
+
+.dark .navbar{
+background:var(--dark-card);
+}
+
+.nav-links a{
+margin-right:10px;
+cursor:pointer;
+}
+
+.card{
+background:var(--card);
+padding:25px;
+border-radius:12px;
+margin:20px;
+box-shadow:0 10px 20px rgba(0,0,0,.05);
+transition:.3s;
+}
+
+.dark .card{
+background:var(--dark-card);
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+.tool-section{display:none}
+.tool-section.active{display:block}
+
+input,select{
+padding:10px;
+margin:5px;
+border-radius:8px;
+border:1px solid var(--border);
+}
+
+button{
+padding:10px 15px;
+border:none;
+border-radius:8px;
+background:var(--primary);
+color:white;
+cursor:pointer;
+}
+
+button:hover{opacity:.9}
+
+.timer-display{
+font-size:60px;
+text-align:center;
+margin:20px;
+}
+
+.toast{
+position:fixed;
+bottom:20px;
+right:20px;
+background:black;
+color:white;
+padding:10px 15px;
+border-radius:6px;
+}
+
+.progress{
+height:10px;
+background:#ddd;
+border-radius:6px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:10px;
+background:var(--primary);
+width:0%;
+}
+
+</style>
+</head>
+
+<body>
+
+<nav class="navbar">
+<div>
+<strong>StudentToolkit</strong>
+</div>
+
+<div class="nav-links">
+<a onclick="showTool('idea')">Ideas</a>
+<a onclick="showTool('gpa')">GPA</a>
+<a onclick="showTool('timer')">Timer</a>
+<a onclick="showTool('todo')">To-Do</a>
+<a onclick="showTool('notes')">Notes</a>
+<a onclick="showTool('calc')">Calculator</a>
+<a onclick="showTool('goal')">Goals</a>
+</div>
+
+<button onclick="toggleDark()">🌙</button>
+</nav>
+
+
+<!-- IDEA BOARD -->
+
+<section id="idea" class="tool-section active">
+<div class="card">
+
+<h2>Idea Board</h2>
+
+<input id="ideaUser" placeholder="Name">
+<input id="ideaInput" placeholder="Idea">
+<button onclick="addIdea()">Add</button>
+
+<div id="ideaList"></div>
+
+</div>
+</section>
+
+
+<!-- GPA CALCULATOR -->
+
+<section id="gpa" class="tool-section">
+<div class="card">
+
+<h2>GPA Calculator</h2>
+
+<input id="course" placeholder="Course">
+<input id="credits" type="number" placeholder="Credits">
+
+<select id="grade">
+<option value="4">A</option>
+<option value="3">B</option>
+<option value="2">C</option>
+<option value="1">D</option>
+<option value="0">F</option>
+</select>
+
+<button onclick="addSubject()">Add</button>
+
+<table id="gpaTable"></table>
+
+<br>
+
+<button onclick="calculateGPA()">Calculate GPA</button>
+
+<div id="gpaResult" style="margin-top:20px;font-size:20px;"></div>
+
+</div>
+</section>
+
+
+<!-- TIMER -->
+
+<section id="timer" class="tool-section">
+<div class="card">
+
+<h2>Pomodoro Timer</h2>
+
+<div class="timer-display" id="timerDisplay">25:00</div>
+
+<button onclick="startTimer()">Start</button>
+<button onclick="pauseTimer()">Pause</button>
+<button onclick="resetTimer()">Reset</button>
+<button onclick="shortBreak()">Break</button>
+
+</div>
+</section>
+
+
+<!-- TODO -->
+
+<section id="todo" class="tool-section">
+<div class="card">
+
+<h2>To-Do List</h2>
+
+<input id="todoInput" placeholder="Task">
+<button onclick="addTodo()">Add</button>
+
+<ul id="todoList"></ul>
+
+</div>
+</section>
+
+
+<!-- NOTES -->
+
+<section id="notes" class="tool-section">
+<div class="card">
+
+<h2>Quick Notes</h2>
+
+<textarea id="notesBox" style="width:100%;height:200px;"></textarea>
+
+</div>
+</section>
+
+
+<!-- CALCULATOR -->
+
+<section id="calc" class="tool-section">
+<div class="card">
+
+<h2>Calculator</h2>
+
+<input id="calcInput">
+
+<button onclick="calculate()">=</button>
+
+<div id="calcResult"></div>
+
+</div>
+</section>
+
+
+<!-- GOALS -->
+
+<section id="goal" class="tool-section">
+<div class="card">
+
+<h2>Study Goal Tracker</h2>
+
+<input id="goalInput" placeholder="Goal">
+<button onclick="addGoal()">Add Goal</button>
+
+<ul id="goalList"></ul>
+
+<div class="progress">
+<div class="progress-bar" id="goalBar"></div>
+</div>
+
+</div>
+</section>
+
+
+<script>
+
+/* NAVIGATION */
+
+function showTool(id){
+document.querySelectorAll('.tool-section')
+.forEach(s=>s.classList.remove('active'))
+
+document.getElementById(id).classList.add('active')
+}
+
+
+/* DARK MODE */
+
+function toggleDark(){
+
+document.body.classList.toggle("dark")
+
+localStorage.setItem("darkMode",
+document.body.classList.contains("dark"))
+}
+
+if(localStorage.getItem("darkMode")==="true")
+document.body.classList.add("dark")
+
+
+/* TOAST */
+
+function toast(msg){
+
+let t=document.createElement("div")
+t.className="toast"
+t.innerText=msg
+document.body.appendChild(t)
+
+setTimeout(()=>t.remove(),3000)
+}
+
+
+/* IDEA BOARD */
+
+let ideas=JSON.parse(localStorage.getItem("ideas"))||[]
+
+function renderIdeas(){
+
+let list=document.getElementById("ideaList")
+list.innerHTML=""
+
+ideas.forEach(i=>{
+let div=document.createElement("div")
+div.innerText=i.user+" : "+i.text
+list.appendChild(div)
+})
+
+localStorage.setItem("ideas",JSON.stringify(ideas))
+}
+
+function addIdea(){
+
+let user=document.getElementById("ideaUser").value
+let text=document.getElementById("ideaInput").value
+
+ideas.push({user,text})
+
+renderIdeas()
+
+toast("Idea added")
+}
+
+renderIdeas()
+
+
+/* GPA */
+
+let subjects=JSON.parse(localStorage.getItem("subjects"))||[]
+
+function addSubject(){
+
+let name=document.getElementById("course").value
+let credits=document.getElementById("credits").value
+let grade=document.getElementById("grade").value
+
+if(!name||!credits){
+alert("Missing data")
+return
+}
+
+subjects.push({name,credits,grade})
+
+localStorage.setItem("subjects",JSON.stringify(subjects))
+
+renderSubjects()
+}
+
+function renderSubjects(){
+
+let table=document.getElementById("gpaTable")
+
+table.innerHTML=""
+
+subjects.forEach(s=>{
+table.innerHTML+=`<tr>
+<td>${s.name}</td>
+<td>${s.credits}</td>
+<td>${s.grade}</td>
+</tr>`
+})
+}
+
+function calculateGPA(){
+
+let totalPoints=0
+let totalCredits=0
+
+subjects.forEach(s=>{
+totalPoints+=s.grade*s.credits
+totalCredits+=Number(s.credits)
+})
+
+let gpa=(totalPoints/totalCredits).toFixed(2)
+
+document.getElementById("gpaResult").innerText="Your GPA: "+gpa
+
+toast("GPA Calculated")
+}
+
+renderSubjects()
+
+
+/* TIMER */
+
+let time=1500
+let timer
+
+function updateTimer(){
+
+let m=Math.floor(time/60)
+let s=time%60
+
+document.getElementById("timerDisplay")
+.innerText=`${m}:${s.toString().padStart(2,"0")}`
+}
+
+function startTimer(){
+
+timer=setInterval(()=>{
+
+time--
+
+updateTimer()
+
+if(time<=0){
+
+clearInterval(timer)
+
+new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg").play()
+
+toast("Pomodoro complete!")
+
+if(Notification.permission==="granted")
+new Notification("Pomodoro session complete!")
+
+}
+
+},1000)
+}
+
+function pauseTimer(){
+clearInterval(timer)
+}
+
+function resetTimer(){
+clearInterval(timer)
+time=1500
+updateTimer()
+}
+
+function shortBreak(){
+clearInterval(timer)
+time=300
+updateTimer()
+}
+
+
+/* TODO */
+
+let todos=JSON.parse(localStorage.getItem("todos"))||[]
+
+function addTodo(){
+
+let text=document.getElementById("todoInput").value
+
+todos.push(text)
+
+localStorage.setItem("todos",JSON.stringify(todos))
+
+renderTodos()
+}
+
+function renderTodos(){
+
+let list=document.getElementById("todoList")
+list.innerHTML=""
+
+todos.forEach(t=>{
+let li=document.createElement("li")
+li.innerText=t
+list.appendChild(li)
+})
+}
+
+renderTodos()
+
+
+/* NOTES */
+
+let notesBox=document.getElementById("notesBox")
+
+notesBox.value=localStorage.getItem("notes")||""
+
+notesBox.addEventListener("input",()=>{
+localStorage.setItem("notes",notesBox.value)
+})
+
+
+/* CALCULATOR */
+
+function calculate(){
+
+let exp=document.getElementById("calcInput").value
+
+document.getElementById("calcResult").innerText=eval(exp)
+}
+
+
+/* GOALS */
+
+let goals=JSON.parse(localStorage.getItem("goals"))||[]
+
+function addGoal(){
+
+let g=document.getElementById("goalInput").value
+
+goals.push({text:g,done:false})
+
+localStorage.setItem("goals",JSON.stringify(goals))
+
+renderGoals()
+}
+
+function renderGoals(){
+
+let list=document.getElementById("goalList")
+
+list.innerHTML=""
+
+let done=0
+
+goals.forEach((g,i)=>{
+
+let li=document.createElement("li")
+
+let cb=document.createElement("input")
+cb.type="checkbox"
+cb.checked=g.done
+
+cb.onchange=()=>{
+goals[i].done=cb.checked
+localStorage.setItem("goals",JSON.stringify(goals))
+renderGoals()
+}
+
+li.appendChild(cb)
+li.append(" "+g.text)
+
+list.appendChild(li)
+
+if(g.done)done++
+})
+
+let percent=(done/goals.length)*100||0
+
+document.getElementById("goalBar").style.width=percent+"%"
+}
+
+renderGoals()
+
+</script>
+
+</body>
+</html>
