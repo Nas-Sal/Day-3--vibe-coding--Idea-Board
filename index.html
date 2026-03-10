@@ -161,6 +161,26 @@ button:hover{
 background:var(--primary-hover);
 }
 
+.btn-secondary{
+background:#cbd5e1;
+color:var(--text-main);
+}
+
+.btn-danger{
+background:#fee2e2;
+color:#991b1b;
+}
+
+body.dark .btn-secondary{
+background:#475569;
+color:#f8fafc;
+}
+
+body.dark .btn-danger{
+background:#452222;
+color:#fca5a5;
+}
+
 .gpa-result{
 margin-top:20px;
 padding:15px;
@@ -246,12 +266,16 @@ APRIL 12<br>UI Assignment
 <section id="idea-board" class="tool-section active">
 <div class="card">
 
-<h2>Idea Board</h2>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h2><i class="ph-fill ph-lightbulb"></i> Idea Board</h2>
+    <span id="ideaCount" style="background:var(--primary); color:white; padding:4px 12px; border-radius:20px; font-size:0.9rem;">0 Ideas</span>
+</div>
 
 <div class="form-row">
 <input id="ideaUser" placeholder="Your Name">
 <input id="ideaInput" placeholder="Idea">
-<button onclick="addIdea()">Add</button>
+<button type="button" onclick="addIdea()">Add</button>
+<button type="button" onclick="clearInputs(); return false;" class="btn-secondary">Clear</button>
 </div>
 
 <div id="ideaList"></div>
@@ -335,6 +359,13 @@ APRIL 12<br>UI Assignment
 function showTool(id){
 document.querySelectorAll(".tool-section").forEach(s=>s.classList.remove("active"));
 document.getElementById(id).classList.add("active");
+
+document.querySelectorAll(".nav-item").forEach(nav => {
+nav.classList.remove("active");
+if(nav.getAttribute("onclick").includes(id)) {
+nav.classList.add("active");
+}
+});
 }
 
 /* DARK MODE */
@@ -365,27 +396,43 @@ let ideas=JSON.parse(localStorage.getItem("ideas"))||[]
 
 function renderIdeas(){
 const list=document.getElementById("ideaList")
+const count=document.getElementById("ideaCount")
 list.innerHTML=""
 
 ideas.forEach((i,index)=>{
 list.innerHTML+=`
-<div class="event-card">
-${i.user}: ${i.text}
-<button onclick="deleteIdea(${index})">x</button>
+<div class="event-card" style="display:flex; justify-content:space-between; align-items:center;">
+<span>${i.text} <small style="opacity:0.7; margin-left:10px;">by ${i.user}</small></span>
+<button onclick="deleteIdea(${index})" class="btn-danger" style="padding:6px 12px; font-size:0.8rem;">Delete</button>
 </div>`
 })
 
+count.innerText = `${ideas.length} ${ideas.length === 1 ? 'Idea' : 'Ideas'}`
 localStorage.setItem("ideas",JSON.stringify(ideas))
 }
 
 function addIdea(){
+const userEl=document.getElementById("ideaUser")
+const textEl=document.getElementById("ideaInput")
 
-const user=document.getElementById("ideaUser").value
-const text=document.getElementById("ideaInput").value
+if(!userEl.value || !textEl.value) {
+    alert("Please fill in both fields")
+    return
+}
 
-ideas.push({user,text})
-
+ideas.push({user: userEl.value, text: textEl.value})
+userEl.value = ""
+textEl.value = ""
 renderIdeas()
+}
+
+function clearInputs(){
+if(confirm("Are you sure you want to delete all ideas?")) {
+    ideas = [];
+    document.getElementById("ideaUser").value = "";
+    document.getElementById("ideaInput").value = "";
+    renderIdeas();
+}
 }
 
 function deleteIdea(i){
