@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Toolkit Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --bg-soft: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --card-bg: rgba(255, 255, 255, 0.9);
+            --border: #e2e8f0;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --sidebar-width: 260px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: 
+                radial-gradient(at 20% 30%, #c7d2fe 0px, transparent 50%),
+                radial-gradient(at 80% 20%, #fbcfe8 0px, transparent 50%),
+                radial-gradient(at 50% 80%, #a5f3fc 0px, transparent 50%),
+                #f8fafc;
+            min-height: 100vh;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- Layout Structure --- */
+        .app-wrapper {
+            display: grid;
+            grid-template-columns: var(--sidebar-width) 1fr;
+            grid-template-rows: 70px 1fr;
+            min-height: 100vh;
+        }
+
+        /* --- Navbar --- */
+        .navbar {
+            grid-column: 1 / -1;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.9rem;
+            transition: 0.2s;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            background: var(--card-bg);
+            border-right: 1px solid var(--border);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .event-card {
+            background: white;
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 10px;
+        }
+
+        .event-date {
+            font-size: 0.7rem;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .event-name {
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* --- Main Content --- */
+        .main-content {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tool-section {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tool-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        /* --- Tool Specific Styles --- */
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #f1f5f9;
+            min-width: 150px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border-radius: 10px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* GPA Table */
+        .gpa-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .gpa-table th {
+            text-align: left;
+            padding: 12px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .gpa-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Timer */
+        .timer-display {
+            font-size: 5rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 20px 0;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-main);
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--border);
+            color: var(--text-main);
+        }
+
+        /* Mobile Adjustments */
+        .menu-toggle {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .app-wrapper {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                height: calc(100vh - 70px);
+                z-index: 99;
+                width: 80%;
+            }
+            .sidebar.open {
+                left: 0;
+                transform: translateX(0);
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .nav-links {
+                display: none;
+            }
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <nav class="navbar">
+        <div class="nav-logo">
+            <i class="ph-fill ph-graduation-cap"></i>
+            <span>StudentToolkit</span>
+        </div>
+        
+        <div class="nav-links">
+            <a class="nav-item active" onclick="showTool('idea-board')">Idea Board</a>
+            <a class="nav-item" onclick="showTool('gpa-calc')">GPA Calculator</a>
+            <a class="nav-item" onclick="showTool('timer')">Study Timer</a>
+        </div>
+
+        <div class="menu-toggle" onclick="toggleSidebar()">
+            <i class="ph ph-list"></i>
+        </div>
+    </nav>
+
+    <aside class="sidebar" id="sidebar">
+        <h3 class="sidebar-title">Upcoming Events</h3>
+        <div class="event-card">
+            <p class="event-date">APRIL 10</p>
+            <p class="event-name">Math Midterm Exam</p>
+        </div>
+        <div class="event-card">
+            <p class="event-date">APRIL 12</p>
+            <p class="event-name">UI/UX Assignment</p>
+        </div>
+        <div class="event-card">
+            <p class="event-date">APRIL 15</p>
+            <p class="event-name">Group Presentation</p>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <section id="idea-board" class="tool-section active">
+            <div class="card">
+                <h2><i class="ph ph-lightbulb"></i> Group Idea Board</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Collaborate and save your project brainstorms.</p>
+                
+                <div class="form-row">
+                    <select id="ideaUser">
+                        <option>Nimal</option>
+                        <option>Sara</option>
+                        <option>Alex</option>
+                    </select>
+                    <input type="text" id="ideaInput" placeholder="Describe your idea...">
+                    <button onclick="addIdea()">Add Idea</button>
+                </div>
+
+                <div id="ideaList"></div>
+                
+                <div style="margin-top: 30px; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="ideaCountText">Total Ideas: 0</span>
+                    <button class="btn-outline" onclick="clearIdeas()">Clear All</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="gpa-calc" class="tool-section">
+            <div class="card">
+                <h2><i class="ph ph-calculator"></i> GPA Calculator</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Track your academic progress.</p>
+                
+                <div class="form-row">
+                    <input type="text" id="subjectName" placeholder="Subject (e.g. Physics)">
+                    <input type="number" id="creditHours" placeholder="Credits" min="1">
+                    <select id="gradeValue">
+                        <option value="4.0">A</option>
+                        <option value="3.0">B</option>
+                        <option value="2.0">C</option>
+                        <option value="1.0">D</option>
+                        <option value="0.0">F</option>
+                    </select>
+                    <button onclick="addSubject()">Add</button>
+                </div>
+
+                <table class="gpa-table">
+                    <thead>
+                        <tr>
+                            <th>Subject</th>
+                            <th>Credits</th>
+                            <th>Grade</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="gpaList"></tbody>
+                </table>
+
+                <div style="margin-top: 30px; text-align: center;">
+                    <h3 id="gpaDisplay">Cumulative GPA: 0.00</h3>
+                    <button style="margin-top: 15px;" class="btn-outline" onclick="clearGPA()">Reset Calculator</button>
+                </div>
+            </div>
+        </section>
+
+        <section id="timer" class="tool-section">
+            <div class="card" style="text-align: center;">
+                <h2><i class="ph ph-timer"></i> Pomodoro Timer</h2>
+                <p style="color: var(--text-muted);">Focus for 25 minutes, then take a break.</p>
+                
+                <div class="timer-display" id="timerDisplay">25:00</div>
+                
+                <div class="timer-controls">
+                    <button id="startBtn" onclick="toggleTimer()">Start</button>
+                    <button class="btn-outline" onclick="resetTimer()">Reset</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    /* --- NAVIGATION LOGIC --- */
+    function showTool(toolId) {
+        document.querySelectorAll('.tool-section').forEach(section => section.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        
+        document.getElementById(toolId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        
+        if(window.innerWidth <= 768) toggleSidebar(); // Close sidebar on mobile after click
+    }
+
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    /* --- IDEA BOARD LOGIC (with LocalStorage) --- */
+    let ideas = JSON.parse(localStorage.getItem('st_ideas')) || [];
+
+    function renderIdeas() {
+        const list = document.getElementById('ideaList');
+        list.innerHTML = '';
+        ideas.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'event-card'; 
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.innerHTML = `
+                <div>
+                    <div style="font-weight:600">${item.text}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted)">By ${item.user}</div>
+                </div>
+                <button onclick="deleteIdea(${index})" style="padding:4px 8px; background:#ef4444; font-size:10px">Delete</button>
+            `;
+            list.appendChild(div);
+        });
+        document.getElementById('ideaCountText').innerText = `Total Ideas: ${ideas.length}`;
+        localStorage.setItem('st_ideas', JSON.stringify(ideas));
+    }
+
+    function addIdea() {
+        const input = document.getElementById('ideaInput');
+        const user = document.getElementById('ideaUser').value;
+        if (!input.value.trim()) return;
+
+        ideas.push({ text: input.value, user: user });
+        input.value = '';
+        renderIdeas();
+    }
+
+    function deleteIdea(index) {
+        ideas.splice(index, 1);
+        renderIdeas();
+    }
+
+    function clearIdeas() {
+        if (confirm("Clear all ideas?")) {
+            ideas = [];
+            renderIdeas();
+        }
+    }
+
+    /* --- GPA CALCULATOR LOGIC (with LocalStorage) --- */
+    let subjects = JSON.parse(localStorage.getItem('st_gpa')) || [];
+
+    function renderGPA() {
+        const list = document.getElementById('gpaList');
+        list.innerHTML = '';
+        let totalPoints = 0;
+        let totalCredits = 0;
+
+        subjects.forEach((s, index) => {
+            totalPoints += (parseFloat(s.grade) * parseFloat(s.credits));
+            totalCredits += parseFloat(s.credits);
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${s.name}</td>
+                <td>${s.credits}</td>
+                <td>${s.gradeLabel}</td>
+                <td style="text-align:right"><i class="ph ph-trash" style="cursor:pointer; color:#ef4444" onclick="deleteSubject(${index})"></i></td>
+            `;
+            list.appendChild(row);
+        });
+
+        const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00";
+        document.getElementById('gpaDisplay').innerText = `Cumulative GPA: ${gpa}`;
+        localStorage.setItem('st_gpa', JSON.stringify(subjects));
+    }
+
+    function addSubject() {
+        const name = document.getElementById('subjectName').value;
+        const credits = document.getElementById('creditHours').value;
+        const gradeDropdown = document.getElementById('gradeValue');
+        const grade = gradeDropdown.value;
+        const gradeLabel = gradeDropdown.options[gradeDropdown.selectedIndex].text;
+
+        if (!name || !credits) return alert("Fill in all fields");
+
+        subjects.push({ name, credits, grade, gradeLabel });
+        document.getElementById('subjectName').value = '';
+        document.getElementById('creditHours').value = '';
+        renderGPA();
+    }
+
+    function deleteSubject(index) {
+        subjects.splice(index, 1);
+        renderGPA();
+    }
+
+    function clearGPA() {
+        if(confirm("Reset all GPA data?")) {
+            subjects = [];
+            renderGPA();
+        }
+    }
+
+    /* --- POMODORO TIMER LOGIC --- */
+    let timeLeft = 25 * 60;
+    let timerId = null;
+
+    function updateTimerDisplay() {
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('timerDisplay').innerText = 
+            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function toggleTimer() {
+        const btn = document.getElementById('startBtn');
+        if (timerId) {
+            clearInterval(timerId);
+            timerId = null;
+            btn.innerText = "Start";
+        } else {
+            btn.innerText = "Pause";
+            timerId = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    alert("Time is up! Take a break.");
+                    resetTimer();
+                }
+            }, 1000);
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(timerId);
+        timerId = null;
+        timeLeft = 25 * 60;
+        updateTimerDisplay();
+        document.getElementById('startBtn').innerText = "Start";
+    }
+
+    // Initialize App
+    renderIdeas();
+    renderGPA();
+</script>
+
+</body>
+</html>
