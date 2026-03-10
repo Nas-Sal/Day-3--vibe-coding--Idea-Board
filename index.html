@@ -285,15 +285,38 @@
             <a class="nav-item" onclick="showTool('timer')">Study Timer</a>
         </div>
 
-<div class="form-group">
+        <div class="menu-toggle" onclick="toggleSidebar()">
+            <i class="ph ph-list"></i>
+        </div>
+    </nav>
 
-<input type="text" id="name" placeholder="Enter your name">
+    <aside class="sidebar" id="sidebar">
+        <h3 class="sidebar-title">Upcoming Events</h3>
+        <div class="event-card">
+            <p class="event-date">APRIL 10</p>
+            <p class="event-name">Math Midterm Exam</p>
+        </div>
+        <div class="event-card">
+            <p class="event-date">APRIL 12</p>
+            <p class="event-name">UI/UX Assignment</p>
+        </div>
+        <div class="event-card">
+            <p class="event-date">APRIL 15</p>
+            <p class="event-name">Group Presentation</p>
+        </div>
+    </aside>
 
-<input type="text" id="ideaInput" placeholder="Enter your idea here...">
-
-<button onclick="addIdea()">Add Idea</button>
-
-</div>
+    <main class="main-content">
+        <section id="idea-board" class="tool-section active">
+            <div class="card">
+                <h2><i class="ph ph-lightbulb"></i> Group Idea Board</h2>
+                <p style="color: var(--text-muted); margin-bottom: 20px;">Collaborate and save your project brainstorms.</p>
+                
+                <div class="form-row">
+                    <input type="text" id="ideaUser" placeholder="Your Name">
+                    <input type="text" id="ideaInput" placeholder="Describe your idea...">
+                    <button onclick="addIdea()">Add Idea</button>
+                </div>
 
                 <div id="ideaList"></div>
                 
@@ -358,56 +381,164 @@
 </div>
 
 <script>
+    /* --- NAVIGATION LOGIC --- */
+    function showTool(toolId) {
+        document.querySelectorAll('.tool-section').forEach(section => section.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        
+        document.getElementById(toolId).classList.add('active');
+        event.currentTarget.classList.add('active');
+        
+        if(window.innerWidth <= 768) toggleSidebar(); // Close sidebar on mobile after click
+    }
 
-function updateCounter(){
-let count=document.querySelectorAll(".idea-card").length;
-document.getElementById("ideaCount").textContent=count;
-}
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+    }
 
-function addIdea(){
+    /* --- IDEA BOARD LOGIC (with LocalStorage) --- */
+    let ideas = JSON.parse(localStorage.getItem('st_ideas')) || [];
 
-let idea=document.getElementById("ideaInput").value;
-let name=document.getElementById("name").value;
+    function renderIdeas() {
+        const list = document.getElementById('ideaList');
+        list.innerHTML = '';
+        ideas.forEach((item, index) => {
+            const div = document.createElement('div');
+            div.className = 'event-card'; 
+            div.style.display = 'flex';
+            div.style.justifyContent = 'space-between';
+            div.innerHTML = `
+                <div>
+                    <div style="font-weight:600">${item.text}</div>
+                    <div style="font-size:0.75rem; color:var(--text-muted)">By ${item.user}</div>
+                </div>
+                <button onclick="deleteIdea(${index})" style="padding:4px 8px; background:#ef4444; font-size:10px">Delete</button>
+            `;
+            list.appendChild(div);
+        });
+        document.getElementById('ideaCountText').innerText = `Total Ideas: ${ideas.length}`;
+        localStorage.setItem('st_ideas', JSON.stringify(ideas));
+    }
 
-if(name.trim()==""){
-alert("Please enter your name");
-return;
-}
+    function addIdea() {
+        const input = document.getElementById('ideaInput');
+        const user = document.getElementById('ideaUser').value.trim();
+        if (!input.value.trim() || !user) return alert("Please enter both your name and an idea.");
 
-if(idea.trim()==""){
-alert("Please enter an idea");
-return;
-}
+        ideas.push({ text: input.value, user: user });
+        input.value = '';
+        renderIdeas();
+    }
 
-let card=document.createElement("div");
-card.className="idea-card";
+    function deleteIdea(index) {
+        ideas.splice(index, 1);
+        renderIdeas();
+    }
 
-card.innerHTML=
-`<div class="idea-content">
-<div class="idea-text">${idea}</div>
-<div class="idea-author">suggested by ${name}</div>
-</div>
-<button class="delete-btn" onclick="deleteIdea(this)">Delete</button>`;
+    function clearIdeas() {
+        if (confirm("Clear all ideas?")) {
+            ideas = [];
+            renderIdeas();
+        }
+    }
 
-document.getElementById("ideaList").appendChild(card);
+    /* --- GPA CALCULATOR LOGIC (with LocalStorage) --- */
+    let subjects = JSON.parse(localStorage.getItem('st_gpa')) || [];
 
-document.getElementById("ideaInput").value="";
+    function renderGPA() {
+        const list = document.getElementById('gpaList');
+        list.innerHTML = '';
+        let totalPoints = 0;
+        let totalCredits = 0;
 
-updateCounter();
-}
+        subjects.forEach((s, index) => {
+            totalPoints += (parseFloat(s.grade) * parseFloat(s.credits));
+            totalCredits += parseFloat(s.credits);
 
-function deleteIdea(button){
-button.parentElement.remove();
-updateCounter();
-}
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${s.name}</td>
+                <td>${s.credits}</td>
+                <td>${s.gradeLabel}</td>
+                <td style="text-align:right"><i class="ph ph-trash" style="cursor:pointer; color:#ef4444" onclick="deleteSubject(${index})"></i></td>
+            `;
+            list.appendChild(row);
+        });
 
-function clearAll(){
-document.getElementById("ideaList").innerHTML="";
-updateCounter();
-}
+        const gpa = totalCredits > 0 ? (totalPoints / totalCredits).toFixed(2) : "0.00";
+        document.getElementById('gpaDisplay').innerText = `Cumulative GPA: ${gpa}`;
+        localStorage.setItem('st_gpa', JSON.stringify(subjects));
+    }
 
-updateCounter();
+    function addSubject() {
+        const name = document.getElementById('subjectName').value;
+        const credits = document.getElementById('creditHours').value;
+        const gradeDropdown = document.getElementById('gradeValue');
+        const grade = gradeDropdown.value;
+        const gradeLabel = gradeDropdown.options[gradeDropdown.selectedIndex].text;
 
+        if (!name || !credits) return alert("Fill in all fields");
+
+        subjects.push({ name, credits, grade, gradeLabel });
+        document.getElementById('subjectName').value = '';
+        document.getElementById('creditHours').value = '';
+        renderGPA();
+    }
+
+    function deleteSubject(index) {
+        subjects.splice(index, 1);
+        renderGPA();
+    }
+
+    function clearGPA() {
+        if(confirm("Reset all GPA data?")) {
+            subjects = [];
+            renderGPA();
+        }
+    }
+
+    /* --- POMODORO TIMER LOGIC --- */
+    let timeLeft = 25 * 60;
+    let timerId = null;
+
+    function updateTimerDisplay() {
+        const mins = Math.floor(timeLeft / 60);
+        const secs = timeLeft % 60;
+        document.getElementById('timerDisplay').innerText = 
+            `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function toggleTimer() {
+        const btn = document.getElementById('startBtn');
+        if (timerId) {
+            clearInterval(timerId);
+            timerId = null;
+            btn.innerText = "Start";
+        } else {
+            btn.innerText = "Pause";
+            timerId = setInterval(() => {
+                timeLeft--;
+                updateTimerDisplay();
+                if (timeLeft <= 0) {
+                    clearInterval(timerId);
+                    alert("Time is up! Take a break.");
+                    resetTimer();
+                }
+            }, 1000);
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(timerId);
+        timerId = null;
+        timeLeft = 25 * 60;
+        updateTimerDisplay();
+        document.getElementById('startBtn').innerText = "Start";
+    }
+
+    // Initialize App
+    renderIdeas();
+    renderGPA();
 </script>
 
 </body>
