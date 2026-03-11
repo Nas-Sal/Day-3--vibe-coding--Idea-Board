@@ -449,13 +449,33 @@ localStorage.setItem("ideas",JSON.stringify(ideas))
 }
 
 function addIdea(){
-const userEl=document.getElementById("ideaUser")
-const textEl=document.getElementById("ideaInput")
-if(!userEl.value || !textEl.value) { alert("Please fill in both fields"); return; }
-ideas.push({user: userEl.value, text: textEl.value})
+const userEl = document.getElementById("ideaUser")
+const textEl = document.getElementById("ideaInput")
+
+const user = userEl.value.trim()
+const text = textEl.value.trim()
+
+if(!user || !text){
+    alert("Please fill in both fields")
+    return
+}
+
+/* CHECK FOR DUPLICATE IDEAS */
+const duplicate = ideas.some(i => i.text.toLowerCase() === text.toLowerCase())
+
+if(duplicate){
+    alert("This idea already exists. Please enter a unique idea.")
+    return
+}
+
+/* ADD IDEA IF UNIQUE */
+ideas.push({user:user, text:text})
+
 userEl.value = ""
 textEl.value = ""
+
 renderIdeas()
+}
 }
 
 function clearInputs(){
