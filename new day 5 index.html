@@ -1,1 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UCSC Student Toolkit</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://github.com/UCSC-LK/ucsc-student-toolkit/blob/main/src/index.js"></script>
+
+<style>
+
+:root{
+/* UCSC BRANDING COLORS */
+--primary: #800000; /* Maroon */
+--primary-hover: #5a0000;
+--accent: #FFD700; /* Gold */
+
+--bg-soft:#f8fafc;
+--text-main:#1e293b;
+--text-muted:#64748b;
+--card-bg:#ffffff;
+--border:#e2e8f0;
+
+--dark-bg:#0f172a;
+--dark-card:#1e293b;
+--dark-text:#e2e8f0;
+--dark-border:#334155;
+
+--shadow:0 10px 15px rgba(0,0,0,0.1);
+--sidebar-width:260px;
+}
+
+body.dark{
+background:var(--dark-bg);
+color:var(--dark-text);
+}
+
+body.dark .card,
+body.dark .sidebar,
+body.dark .navbar{
+background:var(--dark-card);
+border-color:var(--dark-border);
+}
+
+body.dark input,
+body.dark select{
+background:#334155;
+color:#fff;
+border-color:#475569;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Inter,sans-serif;
+}
+
+body{
+background:var(--bg-soft);
+min-height:100vh;
+transition:0.3s;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.app-wrapper{
+display:grid;
+grid-template-columns:var(--sidebar-width) 1fr;
+grid-template-rows:70px 1fr;
+min-height:100vh;
+}
+
+.navbar{
+grid-column:1/-1;
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:0 30px;
+background:var(--card-bg);
+border-bottom:3px solid var(--accent); /* Added UCSC Gold Border */
+}
+
+.nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+.nav-logo img {
+    height: 40px;
+}
+
+.nav-links{
+display:flex;
+gap:20px;
+}
+
+.nav-item{
+cursor:pointer;
+padding:8px 12px;
+border-radius:8px;
+color:var(--text-muted);
+font-weight: 500;
+transition: 0.2s;
+}
+
+.nav-item.active{
+color:var(--primary);
+background:rgba(128, 0, 0, 0.1);
+}
+
+.dark-toggle{
+cursor:pointer;
+font-size:20px;
+}
+
+/* INTERACTIVE SIDEBAR */
+.sidebar{
+background:var(--card-bg);
+border-right:1px solid var(--border);
+padding:30px 20px;
+}
+
+.sidebar h3 {
+    margin-bottom: 20px;
+    color: var(--primary);
+    font-size: 1.1rem;
+}
+
+.event-card{
+background:white;
+border:1px solid var(--border);
+padding:15px;
+border-radius:10px;
+margin-bottom:15px;
+transition: all 0.3s ease;
+cursor: default;
+}
+
+/* Hover Effects: Expand and Glow */
+.event-card:hover {
+    transform: scale(1.05);
+    border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+body.dark .event-card {
+    background: var(--dark-bg);
+}
+
+.main-content{
+padding:40px;
+}
+
+.tool-section{
+display:none;
+animation: fadeIn 0.5s ease-out; /* Section Fade-in */
+}
+
+.tool-section.active{
+display:block;
+}
+
+.card{
+background:white;
+border-radius:20px;
+padding:30px;
+box-shadow:var(--shadow);
+border:1px solid var(--border);
+}
+
+.form-row{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+input,select{
+padding:10px;
+border-radius:10px;
+border:1px solid var(--border);
+flex:1;
+}
+
+button{
+padding:10px 16px;
+border:none;
+border-radius:10px;
+background:var(--primary);
+color:white;
+font-weight: 600;
+cursor:pointer;
+transition: 0.2s;
+}
+
+button:hover{
+background:var(--primary-hover);
+transform: translateY(-1px);
+}
+
+.btn-secondary{
+background:#cbd5e1;
+color:var(--text-main);
+}
+
+.btn-danger{
+background:#fee2e2;
+color:#991b1b;
+}
+
+body.dark .btn-secondary{
+background:#475569;
+color:#f8fafc;
+}
+
+body.dark .btn-danger{
+background:#452222;
+color:#fca5a5;
+}
+
+.gpa-result{
+margin-top:20px;
+padding:15px;
+border-radius:10px;
+font-weight:600;
+text-align:center;
+}
+
+.gpa-good{background:#dcfce7;color:#166534;}
+.gpa-mid{background:#fef9c3;color:#854d0e;}
+.gpa-bad{background:#fee2e2;color:#991b1b;}
+
+.timer-display{
+font-size:4rem;
+text-align:center;
+margin:20px 0;
+font-weight: 700;
+color: var(--primary);
+}
+
+.timer-controls{
+display:flex;
+gap:10px;
+justify-content:center;
+}
+
+.progress-ring{
+width:150px;
+height:150px;
+margin:auto;
+}
+
+.progress-ring circle{
+fill:none;
+stroke:var(--accent); /* Changed to UCSC Gold */
+stroke-width:8;
+stroke-dasharray:440;
+stroke-dashoffset:0;
+transition:stroke-dashoffset 1s linear;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="app-wrapper">
+
+<nav class="navbar">
+
+<div class="nav-logo">
+    <img src="C:\Users\USER\Downloads\6937151.png" alt="UCSC Logo">
+    <span>UCSC Toolkit</span>
+</div>
+
+<div class="nav-links">
+<a class="nav-item active" onclick="showTool('idea-board')">Idea Board</a>
+<a class="nav-item" onclick="showTool('gpa-calc')">GPA Calculator</a>
+<a class="nav-item" onclick="showTool('timer')">Study Timer</a>
+</div>
+
+<div class="dark-toggle" onclick="toggleDarkMode()">
+<i id="darkIcon" class="ph ph-moon"></i>
+</div>
+
+</nav>
+
+<aside class="sidebar">
+
+<h3>Upcoming Events</h3>
+
+<div class="event-card">
+    <strong style="color:var(--primary)">APRIL 10</strong><br>
+    Math Midterm
+</div>
+
+<div class="event-card">
+    <strong style="color:var(--primary)">APRIL 12</strong><br>
+    UI Assignment
+</div>
+
+</aside>
+
+<main class="main-content">
+
+<section id="idea-board" class="tool-section active">
+<div class="card">
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h2><i class="ph-fill ph-lightbulb"></i> Idea Board</h2>
+    <span id="ideaCount" style="background:var(--accent); color:var(--primary); padding:4px 12px; border-radius:20px; font-size:0.9rem; font-weight:bold;">0 Ideas</span>
+</div>
+
+<div class="form-row">
+<input id="ideaUser" placeholder="Your Name">
+<input id="ideaInput" placeholder="Idea">
+<button type="button" onclick="addIdea()">Add Idea</button>
+<button type="button" onclick="clearInputs(); return false;" class="btn-secondary">Clear All</button>
+</div>
+
+<div id="ideaList"></div>
+
+</div>
+</section>
+
+<section id="gpa-calc" class="tool-section">
+
+<div class="card">
+
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h2>GPA Calculator</h2>
+    <button onclick="clearSubjects()" class="btn-secondary" style="padding:4px 12px; font-size:0.9rem;">Clear All</button>
+</div>
+
+<div class="form-row">
+<input id="subjectName" placeholder="Subject">
+<input type="number" id="creditHours" placeholder="Credits">
+<select id="gradeValue">
+<option value="4">A</option>
+<option value="3">B</option>
+<option value="2">C</option>
+<option value="1">D</option>
+<option value="0">F</option>
+</select>
+<button onclick="addSubject()">Add Subject</button>
+</div>
+
+<table width="100%" style="border-collapse: collapse;">
+<thead>
+<tr style="text-align:left; border-bottom:2px solid var(--border);">
+<th style="padding:10px;">Subject</th>
+<th style="padding:10px;">Credits</th>
+<th style="padding:10px;">Grade</th>
+<th style="padding:10px;"></th>
+</tr>
+</thead>
+
+<tbody id="gpaList"></tbody>
+
+</table>
+
+<br>
+
+<button onclick="calculateGPA()" style="width:100%">Calculate My GPA</button>
+
+<div id="gpaResult" class="gpa-result"></div>
+
+</div>
+
+</section>
+
+<section id="timer" class="tool-section">
+
+<div class="card" style="text-align:center">
+
+<h2>Pomodoro Timer</h2>
+
+<svg class="progress-ring">
+<circle r="70" cx="75" cy="75" id="progressCircle"></circle>
+</svg>
+
+<div class="timer-display" id="timerDisplay">25:00</div>
+
+<div class="timer-controls">
+<button onclick="toggleTimer()">Start / Pause</button>
+<button onclick="resetTimer()" class="btn-secondary">Reset</button>
+<button onclick="shortBreak()" style="background:var(--accent); color:var(--primary);">Short Break</button>
+</div>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+<script>
+function showTool(id){
+document.querySelectorAll(".tool-section").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+
+document.querySelectorAll(".nav-item").forEach(nav => {
+nav.classList.remove("active");
+if(nav.getAttribute("onclick").includes(id)) {
+nav.classList.add("active");
+}
+});
+}
+
+function toggleDarkMode(){
+document.body.classList.toggle("dark")
+const icon=document.getElementById("darkIcon")
+if(document.body.classList.contains("dark")){
+icon.className="ph ph-sun"
+localStorage.setItem("theme","dark")
+}else{
+icon.className="ph ph-moon"
+localStorage.setItem("theme","light")
+}
+}
+
+if(localStorage.getItem("theme")==="dark"){
+document.body.classList.add("dark")
+}
+
+/* IDEA BOARD LOGIC */
+let ideas=JSON.parse(localStorage.getItem("ideas"))||[]
+function renderIdeas(){
+const list=document.getElementById("ideaList")
+const count=document.getElementById("ideaCount")
+list.innerHTML=""
+ideas.forEach((i,index)=>{
+list.innerHTML+=`
+<div class="event-card" style="display:flex; justify-content:space-between; align-items:center;">
+<span><strong>${i.text}</strong> <small style="opacity:0.7; margin-left:10px;">by ${i.user}</small></span>
+<button onclick="deleteIdea(${index})" class="btn-danger" style="padding:6px 12px; font-size:0.8rem;">Delete</button>
+</div>`
+})
+count.innerText = `${ideas.length} ${ideas.length === 1 ? 'Idea' : 'Ideas'}`
+localStorage.setItem("ideas",JSON.stringify(ideas))
+}
+
+function addIdea(){
+const userEl=document.getElementById("ideaUser")
+const textEl=document.getElementById("ideaInput")
+const user = userEl.value.trim()
+const text = textEl.value.trim()
+
+if(!user || !text) { 
+    alert("Please fill in both fields")
+    return
+}
+
+/* CHECK FOR DUPLICATE IDEAS */
+const isDuplicate = ideas.some(i => i.text.toLowerCase() === text.toLowerCase())
+
+if(isDuplicate){
+    alert("This idea already exists. Please enter a unique idea.")
+    return
+}
+
+/* ADD IDEA */
+ideas.push({user: user, text: text})
+userEl.value = ""
+textEl.value = ""
+renderIdeas()
+}
+
+function clearInputs(){
+if(confirm("Are you sure you want to delete all ideas?")) {
+    ideas = [];
+    renderIdeas();
+}
+}
+
+function deleteIdea(i){
+ideas.splice(i,1)
+renderIdeas()
+}
+renderIdeas()
+
+/* GPA LOGIC */
+let subjects=JSON.parse(localStorage.getItem("gpa"))||[]
+const gradeMap = { "4": "A", "3": "B", "2": "C", "1": "D", "0": "F" };
+
+function renderSubjects(){
+const list=document.getElementById("gpaList")
+list.innerHTML=""
+subjects.forEach((s,i)=>{
+list.innerHTML+=`
+<tr style="border-bottom:1px solid var(--border)">
+<td style="padding:10px" contenteditable oninput="editSubject(${i},'name',this.innerText)">${s.name}</td>
+<td style="padding:10px" contenteditable oninput="editSubject(${i},'credits',this.innerText)">${s.credits}</td>
+<td style="padding:10px">${gradeMap[s.grade] || s.grade}</td>
+<td style="padding:10px"><button onclick="deleteSubject(${i})" class="btn-danger" style="padding:2px 8px">x</button></td>
+</tr>`
+})
+localStorage.setItem("gpa",JSON.stringify(subjects))
+}
+
+function addSubject(){
+const name=document.getElementById("subjectName").value
+const credits=document.getElementById("creditHours").value
+const grade=document.getElementById("gradeValue").value
+if(!name||credits<=0){ alert("Enter valid data"); return; }
+subjects.push({name,credits,grade})
+document.getElementById("subjectName").value = ""
+document.getElementById("creditHours").value = ""
+renderSubjects()
+}
+
+function editSubject(i,key,val){
+subjects[i][key]=val
+localStorage.setItem("gpa",JSON.stringify(subjects))
+}
+
+function deleteSubject(i){
+subjects.splice(i,1)
+renderSubjects()
+}
+
+function clearSubjects(){
+if(confirm("Clear all subjects?")) {
+    subjects = [];
+    renderSubjects();
+    document.getElementById("gpaResult").innerText = "";
+    document.getElementById("gpaResult").className = "gpa-result";
+}
+}
+
+function calculateGPA(){
+let points=0; let credits=0;
+subjects.forEach(s=>{ points+=s.grade*s.credits; credits+=parseFloat(s.credits); })
+if(credits === 0) return;
+const gpa=(points/credits).toFixed(2)
+const box=document.getElementById("gpaResult")
+box.innerText="GPA : "+gpa
+box.className="gpa-result "
+if(gpa>=3.5)box.classList.add("gpa-good")
+else if(gpa>=2.5)box.classList.add("gpa-mid")
+else box.classList.add("gpa-bad")
+}
+renderSubjects()
+
+/* TIMER LOGIC */
+let time=1500; let timer=null;
+const circle=document.getElementById("progressCircle");
+const circumference=440;
+
+function updateTimer(){
+let min=Math.floor(time/60); let sec=time%60;
+document.getElementById("timerDisplay").innerText=`${min.toString().padStart(2,"0")}:${sec.toString().padStart(2,"0")}`
+circle.style.strokeDashoffset=circumference-(time/1500)*circumference
+}
+
+function toggleTimer(){
+if(timer){ clearInterval(timer); timer=null; return; }
+timer=setInterval(()=>{
+time--; updateTimer();
+if(time<=0){
+clearInterval(timer);
+new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg").play()
+if(Notification.permission==="granted"){ new Notification("Time is up! Take a break."); }
+}
+},1000)
+}
+
+function resetTimer(){ clearInterval(timer); timer=null; time=1500; updateTimer(); }
+function shortBreak(){ clearInterval(timer); time=300; updateTimer(); }
+
+Notification.requestPermission();
+updateTimer();
+
+</script>
+
+</body>
+</html>
