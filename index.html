@@ -83,7 +83,127 @@ align-items:center;
 justify-content:space-between;
 padding:0 30px;
 background:var(--card-bg);
-border-bottom:3px solid var(--accent); /* Added UCSC Gold Border */
+border-bottom:3px solid var(--accent);
+gap:20px;
+flex-wrap:wrap;
+}
+
+/* MOBILE RESPONSIVE DESIGN */
+@media (max-width: 900px) {
+  .app-wrapper {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto 1fr;
+  }
+  
+  .navbar {
+    flex-direction:column;
+    padding:15px;
+    align-items:flex-start;
+    gap:10px;
+  }
+  
+  .nav-logo {
+    width:100%;
+  }
+  
+  .nav-links {
+    width:100%;
+    flex-direction:column;
+    gap:10px;
+  }
+  
+  .nav-item {
+    width:100%;
+    text-align:center;
+  }
+  
+  .sidebar {
+    grid-column:1/-1;
+    padding:20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));
+    gap:15px;
+  }
+  
+  .sidebar h3 {
+    grid-column:1/-1;
+    margin-bottom:0;
+  }
+  
+  .main-content {
+    padding:20px;
+  }
+}
+
+@media (max-width: 600px) {
+  :root {
+    --sidebar-width: 100%;
+  }
+  
+  .navbar {
+    padding:10px;
+  }
+  
+  .nav-logo {
+    font-size:0.9rem;
+  }
+  
+  .nav-logo img {
+    height:30px;
+  }
+  
+  .nav-links {
+    gap:5px;
+  }
+  
+  .nav-item {
+    padding:6px 8px;
+    font-size:0.85rem;
+  }
+  
+  .sidebar {
+    grid-template-columns:1fr;
+    padding:15px;
+  }
+  
+  .main-content {
+    padding:15px;
+  }
+  
+  .card {
+    padding:20px;
+    border-radius:15px;
+  }
+  
+  .form-row {
+    gap:5px;
+  }
+  
+  input, select {
+    padding:8px;
+    font-size:16px;
+  }
+  
+  button {
+    padding:8px 12px;
+    font-size:0.9rem;
+  }
+  
+  .timer-display {
+    font-size:3rem;
+  }
+  
+  h2 {
+    font-size:1.3rem;
+  }
+  
+  table {
+    font-size:0.85rem !important;
+  }
+  
+  table th, table td {
+    padding:8px !important;
+  }
 }
 
 .nav-logo {
@@ -189,6 +309,7 @@ padding:10px;
 border-radius:10px;
 border:1px solid var(--border);
 flex:1;
+min-width:150px;
 }
 
 button{
@@ -257,15 +378,39 @@ justify-content:center;
 width:150px;
 height:150px;
 margin:auto;
+max-width:100%;
 }
 
 .progress-ring circle{
 fill:none;
-stroke:var(--accent); /* Changed to UCSC Gold */
+stroke:var(--accent);
 stroke-width:8;
 stroke-dasharray:440;
 stroke-dashoffset:0;
 transition:stroke-dashoffset 1s linear;
+stroke-linecap:round;
+}
+
+/* Additional Responsive Improvements */
+@media (max-width: 500px) {
+  .progress-ring {
+    width:120px;
+    height:120px;
+    margin:20px auto;
+  }
+  
+  .progress-ring circle {
+    stroke-width:6;
+  }
+  
+  .event-card {
+    padding:12px;
+    margin-bottom:10px;
+  }
+  
+  .timer-display {
+    font-size:2.5rem;
+  }
 }
 
 </style>
@@ -384,7 +529,7 @@ transition:stroke-dashoffset 1s linear;
 
 <h2>Pomodoro Timer</h2>
 
-<svg class="progress-ring">
+<svg class="progress-ring" viewBox="0 0 150 150" width="100%" height="auto" preserveAspectRatio="xMidYMid meet">
 <circle r="70" cx="75" cy="75" id="progressCircle"></circle>
 </svg>
 
